@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVFoundation/AVFoundation.h>
 
 @class GVMusicPlayerController;
 
@@ -30,6 +31,7 @@
 @property (nonatomic, readonly) NSUInteger indexOfNowPlayingItem; // NSNotFound if no queue
 @property (nonatomic) BOOL updateNowPlayingCenter; // default YES
 @property (nonatomic, readonly) NSArray *queue;
+@property (nonatomic, readonly) CMTime currentTime;
 @property (nonatomic) BOOL shouldReturnToBeginningWhenSkippingToPreviousItem; // default YES
 
 + (GVMusicPlayerController *)sharedInstance;
@@ -46,6 +48,8 @@
 
 - (void)playItemAtIndex:(NSUInteger)index;
 - (void)playItem:(MPMediaItem *)item;
+
+- (void)seekToPercent:(CGFloat)percent completion:(void(^)(void))completion;
 
 // Check MPMediaPlayback for other playback related methods
 // and properties like play, plause, currentPlaybackTime

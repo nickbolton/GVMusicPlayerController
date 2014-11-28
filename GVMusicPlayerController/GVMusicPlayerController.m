@@ -240,6 +240,26 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
     return YES;
 }
 
+- (void)seekToPercent:(CGFloat)percent completion:(void(^)(void))completion {
+    
+    percent = MAX(0.0f, percent);
+    percent = MIN(1.0f, percent);
+    
+    NSTimeInterval duration =
+    CMTimeGetSeconds(self.player.currentItem.duration);
+    
+    NSTimeInterval newTime = percent * duration;
+    
+    CMTime time = self.player.currentTime;
+    time.value = newTime * time.timescale;
+    
+    [self.player.currentItem seekToTime:time completionHandler:^(BOOL finished) {
+        if (completion != nil) {
+            completion();
+        }
+    }];
+}
+
 - (NSTimeInterval)currentPlaybackTime {
 #if !(TARGET_IPHONE_SIMULATOR)
     return self.player.currentTime.value / self.player.currentTime.timescale;
@@ -353,6 +373,10 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
     [self doUpdateNowPlayingCenter];
 
     self.isLoadingAsset = NO;
+}
+
+- (CMTime)currentTime {
+    return self.player.currentTime;
 }
 
 - (void)playItemAtIndex:(NSUInteger)index {
