@@ -345,29 +345,30 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
     MPMediaItem *previousTrack = _nowPlayingItem;
     _nowPlayingItem = nowPlayingItem;
 
-    // Used to prevent duplicate notifications
-    self.isLoadingAsset = YES;
-
-    // Create a new player item
     NSURL *assetUrl = [nowPlayingItem valueForProperty:MPMediaItemPropertyAssetURL];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:assetUrl];
-
-    // Either create a player or replace it
-    if (self.player) {
-        [self.player replaceCurrentItemWithPlayerItem:playerItem];
-    } else {
-        self.player = [AVPlayer playerWithPlayerItem:playerItem];
-    }
-
-    // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAVPlayerItemDidPlayToEndTimeNotification) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
-
+    [self setNowPlayingURL:assetUrl];
+    
     // Inform delegates
     for (id <GVMusicPlayerControllerDelegate> delegate in self.delegates) {
         if ([delegate respondsToSelector:@selector(musicPlayer:trackDidChange:previousTrack:)]) {
             [delegate musicPlayer:self trackDidChange:nowPlayingItem previousTrack:previousTrack];
         }
     }
+}
+
+- (void)setNowPlayingURL:(NSURL *)url {
+
+    // Used to prevent duplicate notifications
+    self.isLoadingAsset = YES;
+
+    // Create a new player item
+    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+
+    // Either create a player or replace it
+    self.player = [AVPlayer playerWithPlayerItem:playerItem];
+
+    // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleAVPlayerItemDidPlayToEndTimeNotification) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
 
     // Inform iOS now playing center
     [self doUpdateNowPlayingCenter];

@@ -42,6 +42,8 @@
 - (void)setQueueWithItemCollection:(MPMediaItemCollection *)itemCollection;
 - (void)setQueueWithQuery:(MPMediaQuery *)query;
 
+- (void)setNowPlayingURL:(NSURL *)url;
+
 - (void)skipToNextItem;
 - (void)skipToBeginning;
 - (void)skipToPreviousItem;
