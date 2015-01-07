@@ -360,9 +360,15 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
 
     // Used to prevent duplicate notifications
     self.isLoadingAsset = YES;
-
+    
+    AVURLAsset* audioAsset =
+    [[AVURLAsset alloc]
+     initWithURL:url
+     options:@{AVURLAssetPreferPreciseDurationAndTimingKey:@YES}];
+    
     // Create a new player item
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithURL:url];
+    AVPlayerItem *playerItem =
+    [AVPlayerItem playerItemWithAsset:audioAsset];
 
     // Either create a player or replace it
     self.player = [AVPlayer playerWithPlayerItem:playerItem];
