@@ -9,6 +9,14 @@
 #import "GVMusicPlayerController.h"
 #import <AVFoundation/AVFoundation.h>
 
+#define GVMUSIC_DEBUG_LOG 0
+
+#if GVMUSIC_DEBUG_LOG
+#define GVLog(...) GVLog(__VA_ARGS__)
+#else
+#define GVLog(...) do { } while (0)
+#endif
+
 
 @interface NSArray (GVShuffledArray)
 - (NSArray *)shuffled;
@@ -98,11 +106,11 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
         NSError *sessionError = nil;
         BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&sessionError];
         if (!success){
-            NSLog(@"setCategory error %@", sessionError);
+            GVLog(@"setCategory error %@", sessionError);
         }
         success = [audioSession setActive:YES error:&sessionError];
         if (!success){
-            NSLog(@"setActive error %@", sessionError);
+            GVLog(@"setActive error %@", sessionError);
         }
         [audioSession setDelegate:self];
 
@@ -185,7 +193,7 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
                     }
                 }
             }
-            NSLog(@"GVMusicPlayerController: end of queue reached");
+            GVLog(@"GVMusicPlayerController: end of queue reached");
             [self stop];
         }
     }
@@ -221,19 +229,19 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
 }
 
 - (void)prepareToPlay {
-    NSLog(@"Not supported");
+    GVLog(@"Not supported");
 }
 
 - (void)beginSeekingBackward {
-    NSLog(@"Not supported");
+    GVLog(@"Not supported");
 }
 
 - (void)beginSeekingForward {
-    NSLog(@"Not supported");
+    GVLog(@"Not supported");
 }
 
 - (void)endSeeking {
-    NSLog(@"Not supported");
+    GVLog(@"Not supported");
 }
 
 - (BOOL)isPreparedToPlay {
@@ -318,7 +326,7 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
             break;
 
         default:
-            NSLog(@"Only MPMusicShuffleModeOff and MPMusicShuffleModeSongs are supported");
+            GVLog(@"Only MPMusicShuffleModeOff and MPMusicShuffleModeSongs are supported");
             _queue = [queue shuffled];
             break;
     }
