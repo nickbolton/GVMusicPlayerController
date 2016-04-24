@@ -261,11 +261,13 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
     CMTime time = self.player.currentTime;
     time.value = newTime * time.timescale;
     
-    [self.player.currentItem seekToTime:time completionHandler:^(BOOL finished) {
-        if (completion != nil) {
-            completion();
-        }
-    }];
+    if (self.player.status == AVPlayerItemStatusReadyToPlay) {
+        [self.player.currentItem seekToTime:time completionHandler:^(BOOL finished) {
+            if (completion != nil) {
+                completion();
+            }
+        }];
+    }
 }
 
 - (NSTimeInterval)currentPlaybackTime {
