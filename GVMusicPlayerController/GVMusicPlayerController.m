@@ -272,7 +272,7 @@ void audioRouteChangeListenerCallback (void *inUserData, AudioSessionPropertyID 
 
 - (NSTimeInterval)currentPlaybackTime {
 #if !(TARGET_IPHONE_SIMULATOR)
-    return self.player.currentTime.value / self.player.currentTime.timescale;
+    return CMTimeGetSeconds(self.player.currentTime);
 #else
     return 0;
 #endif
